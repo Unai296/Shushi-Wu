@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sushi Wu · Molins de Rei</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0d0a07;
+    --paper: #faf6f0;
+    --red: #c8202a;
+    --red-dark: #8b1219;
+    --gold: #c9a84c;
+    --mist: #e8e0d5;
+    --charcoal: #2a2520;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.35;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.6rem 4rem;
+    mix-blend-mode: normal;
+    transition: background 0.4s, padding 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(13,10,7,0.92);
+    backdrop-filter: blur(12px);
+    padding: 1rem 4rem;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  .nav-logo {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: 0.12em;
+    color: var(--paper);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--red); }
+  .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mist);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 0.5rem 1.4rem;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+  }
+  .nav-cta:hover { background: var(--gold); color: var(--ink); }
+
+  /* ── HERO ── */
+  .hero {
+    height: 100vh;
+    min-height: 700px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 5rem 8rem 5rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-kana {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 7rem;
+    line-height: 1;
+    color: rgba(201,168,76,0.08);
+    position: absolute;
+    top: 12%;
+    left: 4rem;
+    font-weight: 700;
+    user-select: none;
+    animation: fadeSlideUp 1.4s ease forwards;
+    opacity: 0;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1.2rem;
+    animation: fadeSlideUp 0.9s 0.3s ease forwards;
+    opacity: 0;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(3.5rem, 6vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.8rem;
+    animation: fadeSlideUp 0.9s 0.5s ease forwards;
+    opacity: 0;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(250,246,240,0.6);
+    max-width: 380px;
+    margin-bottom: 2.8rem;
+    animation: fadeSlideUp 0.9s 0.7s ease forwards;
+    opacity: 0;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+    animation: fadeSlideUp 0.9s 0.9s ease forwards;
+    opacity: 0;
+  }
+
+  .btn-primary {
+    background: var(--red);
+    color: var(--paper);
+    padding: 0.85rem 2.2rem;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: background 0.3s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--red-dark); transform: translateY(-1px); }
+
+  .btn-ghost {
+    color: var(--mist);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(250,246,240,0.3);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--gold); border-color: var(--gold); }
+
+  .hero-rating {
+    margin-top: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    animation: fadeSlideUp 0.9s 1.1s ease forwards;
+    opacity: 0;
+  }
+  .stars { color: var(--gold); letter-spacing: 2px; font-size: 0.9rem; }
+  .rating-text { font-size: 0.78rem; color: rgba(250,246,240,0.5); letter-spacing: 0.05em; }
+  .rating-text strong { color: var(--paper); }
+
+  /* Hero image side */
+  .hero-image-side {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-image-side::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, var(--ink) 0%, transparent 30%),
+                linear-gradient(to top, var(--ink) 0%, transparent 25%);
+    z-index: 1;
+  }
+
+  .hero-img-stack {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 4px;
+  }
+  .hero-img-stack img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.75) saturate(1.1);
+    transition: transform 8s ease;
+  }
+  .hero-img-stack img:hover { transform: scale(1.04); }
+
+  /* Vertical text */
+  .hero-vertical-text {
+    position: absolute;
+    right: 2.5rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    transform-origin: center center;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(250,246,240,0.25);
+    z-index: 3;
+    white-space: nowrap;
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 3rem;
+    left: 5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(250,246,240,0.3);
+    animation: fadeSlideUp 0.9s 1.4s ease forwards;
+    opacity: 0;
+    z-index: 5;
+  }
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: rgba(250,246,240,0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    left: -100%;
+    top: 0; bottom: 0;
+    width: 100%;
+    background: var(--gold);
+    animation: scrollLine 2s 2s infinite ease;
+  }
+
+  @keyframes scrollLine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  /* ── DIVIDER ── */
+  .wave-divider {
+    display: block;
+    width: 100%;
+    height: 60px;
+    background: var(--ink);
+  }
+
+  /* ── PHILOSOPHY ── */
+  .philosophy {
+    background: var(--ink);
+    padding: 9rem 5rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 6rem;
+    align-items: center;
+  }
+  .phil-label {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 5rem;
+    color: rgba(201,168,76,0.12);
+    line-height: 1;
+    font-weight: 700;
+    text-align: right;
+  }
+  .phil-content {}
+  .section-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    line-height: 1.15;
+    margin-bottom: 1.8rem;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+  .section-body {
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: rgba(250,246,240,0.6);
+    max-width: 520px;
+  }
+
+  /* ── MENU HIGHLIGHTS ── */
+  .menu-section {
+    background: var(--charcoal);
+    padding: 8rem 5rem;
+  }
+  .menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 4rem;
+  }
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .menu-card {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 3/4;
+    cursor: pointer;
+  }
+  .menu-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease, filter 0.4s;
+    filter: brightness(0.65) saturate(1.1);
+  }
+  .menu-card:hover img {
+    transform: scale(1.08);
+    filter: brightness(0.45) saturate(1.3);
+  }
+  .menu-card-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2rem 1.8rem;
+    background: linear-gradient(to top, rgba(13,10,7,0.9) 0%, transparent 60%);
+  }
+  .menu-card-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+  .menu-card-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .menu-card-desc {
+    font-size: 0.8rem;
+    color: rgba(250,246,240,0.5);
+    line-height: 1.5;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .menu-card:hover .menu-card-desc { max-height: 60px; }
+  .menu-card-price {
+    font-size: 0.85rem;
+    color: var(--gold);
+    margin-top: 0.6rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* Wide card */
+  .menu-card-wide {
+    grid-column: span 2;
+    aspect-ratio: 16/7;
+  }
+
+  /* ── ABOUT / STORY ── */
+  .story {
+    background: var(--ink);
+    padding: 9rem 5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .story-images {
+    position: relative;
+    height: 560px;
+  }
+  .story-img-1, .story-img-2 {
+    position: absolute;
+    object-fit: cover;
+    border: 2px solid var(--charcoal);
+  }
+  .story-img-1 {
+    width: 72%;
+    height: 75%;
+    top: 0; left: 0;
+    filter: brightness(0.75);
+    z-index: 1;
+  }
+  .story-img-2 {
+    width: 52%;
+    height: 55%;
+    bottom: 0; right: 0;
+    filter: brightness(0.75);
+    z-index: 2;
+    border: 3px solid var(--ink);
+  }
+  .story-badge {
+    position: absolute;
+    bottom: 14%;
+    left: 28%;
+    z-index: 3;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: var(--red);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0.5rem;
+    animation: badgeSpin 12s linear infinite;
+    transform-origin: center;
+  }
+  .story-badge-inner {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    display: block;
+    line-height: 1;
+  }
+  @keyframes badgeSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .story-content {}
+  .story-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(250,246,240,0.08);
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(250,246,240,0.4);
+    margin-top: 0.3rem;
+  }
+
+  /* ── REVIEWS ── */
+  .reviews {
+    background: var(--charcoal);
+    padding: 8rem 5rem;
+    overflow: hidden;
+  }
+  .reviews-header { text-align: center; margin-bottom: 4rem; }
+  .reviews-track {
+    display: flex;
+    gap: 2rem;
+    animation: ticker 30s linear infinite;
+    width: max-content;
+  }
+  .reviews-track:hover { animation-play-state: paused; }
+  .review-card {
+    background: rgba(250,246,240,0.04);
+    border: 1px solid rgba(250,246,240,0.07);
+    padding: 2.2rem;
+    width: 340px;
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .review-card:hover { background: rgba(250,246,240,0.07); }
+  .review-stars { color: var(--gold); margin-bottom: 1rem; letter-spacing: 2px; font-size: 0.85rem; }
+  .review-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: rgba(250,246,240,0.8);
+    margin-bottom: 1.5rem;
+  }
+  .review-author {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(250,246,240,0.35);
+  }
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ── INFO ── */
+  .info {
+    background: var(--ink);
+    padding: 8rem 5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4rem;
+  }
+  .info-block {}
+  .info-icon {
+    font-size: 1.4rem;
+    margin-bottom: 1.2rem;
+    color: var(--gold);
+  }
+  .info-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+  .info-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--paper);
+  }
+  .info-sub {
+    font-size: 0.82rem;
+    color: rgba(250,246,240,0.4);
+    margin-top: 0.5rem;
+    line-height: 1.6;
+  }
+
+  /* ── MAP CTA ── */
+  .map-cta {
+    background: var(--charcoal);
+    padding: 6rem 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+  }
+  .map-cta-text {}
+  .map-cta-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 300;
+    margin-bottom: 0.8rem;
+  }
+  .map-cta-sub { color: rgba(250,246,240,0.5); font-size: 0.9rem; }
+  .btn-map {
+    background: transparent;
+    border: 1px solid var(--red);
+    color: var(--red);
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: background 0.3s, color 0.3s;
+    white-space: nowrap;
+  }
+  .btn-map:hover { background: var(--red); color: var(--paper); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #080604;
+    padding: 5rem 5rem 3rem;
+  }
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 4rem;
+    border-bottom: 1px solid rgba(250,246,240,0.06);
+    margin-bottom: 3rem;
+  }
+  .footer-logo {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--paper);
+    letter-spacing: 0.08em;
+  }
+  .footer-logo span { color: var(--red); }
+  .footer-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(250,246,240,0.3);
+    margin-top: 0.3rem;
+  }
+  .footer-links { display: flex; gap: 4rem; }
+  .footer-col {}
+  .footer-col-title {
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.4rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+  .footer-col ul a {
+    font-size: 0.85rem;
+    color: rgba(250,246,240,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-col ul a:hover { color: var(--paper); }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: rgba(250,246,240,0.2);
+  }
+  .footer-phone {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: rgba(250,246,240,0.5);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(36px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    nav.scrolled { padding: 0.8rem 2rem; }
+    .nav-links { display: none; }
+
+    .hero { grid-template-columns: 1fr; }
+    .hero-text { padding: 0 2rem 5rem; justify-content: flex-end; min-height: 100vh; }
+    .hero-kana { font-size: 4rem; }
+    .hero-image-side { position: absolute; inset: 0; z-index: 0; }
+    .hero-image-side::after {
+      background: linear-gradient(to top, rgba(13,10,7,0.95) 30%, rgba(13,10,7,0.5) 100%);
+    }
+    .hero-img-stack { grid-template-rows: 1fr; }
+    .hero-img-stack img:last-child { display: none; }
+    .hero-text { position: relative; z-index: 2; }
+    .scroll-indicator { left: 2rem; }
+
+    .philosophy { grid-template-columns: 1fr; gap: 1rem; padding: 5rem 2rem; }
+    .phil-label { text-align: left; font-size: 3rem; }
+
+    .menu-section { padding: 5rem 2rem; }
+    .menu-grid { grid-template-columns: 1fr 1fr; }
+    .menu-card-wide { grid-column: span 2; }
+
+    .story { grid-template-columns: 1fr; padding: 5rem 2rem; }
+    .story-images { height: 380px; margin-bottom: 2rem; }
+
+    .reviews { padding: 5rem 2rem; }
+
+    .info { grid-template-columns: 1fr; padding: 5rem 2rem; gap: 3rem; }
+
+    .map-cta { flex-direction: column; gap: 2rem; padding: 4rem 2rem; }
+
+    footer { padding: 4rem 2rem 2rem; }
+    .footer-top { flex-direction: column; gap: 3rem; }
+    .footer-links { flex-direction: column; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">SUSHI <span>WU</span></a>
+  <ul class="nav-links">
+    <li><a href="#carta">Carta</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#resenas">Reseñas</a></li>
+    <li><a href="#info">Contacto</a></li>
+  </ul>
+  <a href="tel:931438437" class="nav-cta">Reservar</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <span class="hero-kana">寿司</span>
+    <p class="hero-eyebrow">Molins de Rei · Barcelona</p>
+    <h1 class="hero-title">
+      El arte del<br/><em>sushi auténtico</em><br/>cerca de ti.
+    </h1>
+    <p class="hero-sub">
+      Cocina japonesa de familia. Pescado fresco, técnica precisa y mucho amor en cada pieza.
+    </p>
+    <div class="hero-actions">
+      <a href="#carta" class="btn-primary">Ver la carta</a>
+      <a href="tel:931438437" class="btn-ghost">Llamar ahora</a>
+    </div>
+    <div class="hero-rating">
+      <span class="stars">★★★★★</span>
+      <span class="rating-text"><strong>4,7</strong> · 474 reseñas en Google</span>
+    </div>
+  </div>
+
+  <div class="hero-image-side">
+    <div class="hero-img-stack">
+      <img
+        src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=900&q=80"
+        alt="Sushi Wu - Sushi rolls"
+        loading="eager"
+      />
+      <img
+        src="https://images.unsplash.com/photo-1553621042-f6e147245754?w=900&q=80"
+        alt="Sushi Wu - Nigiri salmón"
+        loading="eager"
+      />
+    </div>
+  </div>
+
+  <span class="hero-vertical-text">Sushi Wu · Jacint Verdaguer 96</span>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>Descubrir</span>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy" id="nosotros">
+  <div class="phil-label reveal">日本<br/>料理</div>
+  <div class="phil-content reveal">
+    <span class="section-tag">Nuestra filosofía</span>
+    <h2 class="section-title">Más <em>pescado</em><br/>que arroz. Siempre.</h2>
+    <p class="section-body">
+      En Sushi Wu creemos que el sushi de verdad no necesita artificios. Cada pieza está elaborada con pescado fresco de primera calidad, con generosidad y honestidad. Un negocio familiar donde los propietarios son los mismos que te sirven con una sonrisa. Pequeño, íntimo, auténtico.
+    </p>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu-section" id="carta">
+  <div class="menu-header reveal">
+    <div>
+      <span class="section-tag">Lo mejor de nuestra cocina</span>
+      <h2 class="section-title" style="font-size:2.5rem;">Carta <em>destacada</em></h2>
+    </div>
+    <a href="https://www.sushiwu.es/carta" target="_blank" class="btn-ghost">Ver carta completa →</a>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-card menu-card-wide reveal">
+      <img
+        src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=1200&q=80"
+        alt="Sashimi de salmón"
+      />
+      <div class="menu-card-overlay">
+        <span class="menu-card-tag">Especialidad</span>
+        <p class="menu-card-name">Sashimi de Salmón</p>
+        <p class="menu-card-desc">Lonchas generosas de salmón fresco, corte preciso y color vibrante.</p>
+        <span class="menu-card-price">desde 12 €</span>
+      </div>
+    </div>
+
+    <div class="menu-card reveal">
+      <img
+        src="https://images.unsplash.com/photo-1582450871972-ab5ca641643d?w=600&q=80"
+        alt="Maki rolls"
+      />
+      <div class="menu-card-overlay">
+        <span class="menu-card-tag">Clásico</span>
+        <p class="menu-card-name">Maki Rolls</p>
+        <p class="menu-card-desc">Rollitos crujientes con rellenos frescos de temporada.</p>
+        <span class="menu-card-price">desde 8 €</span>
+      </div>
+    </div>
+
+    <div class="menu-card reveal">
+      <img
+        src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80"
+        alt="Poke de salmón"
+      />
+      <div class="menu-card-overlay">
+        <span class="menu-card-tag">Tendencia</span>
+        <p class="menu-card-name">Poke de Salmón</p>
+        <p class="menu-card-desc">Bol completo con salmón marinado, aguacate y toppings frescos.</p>
+        <span class="menu-card-price">desde 13 €</span>
+      </div>
+    </div>
+
+    <div class="menu-card reveal">
+      <img
+        src="https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=600&q=80"
+        alt="Nigiri"
+      />
+      <div class="menu-card-overlay">
+        <span class="menu-card-tag">Tradición</span>
+        <p class="menu-card-name">Nigiri Variado</p>
+        <p class="menu-card-desc">La pureza del nigiri: arroz templado, pescado del día.</p>
+        <span class="menu-card-price">desde 10 €</span>
+      </div>
+    </div>
+
+    <div class="menu-card reveal">
+      <img
+        src="https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80"
+        alt="Temaki"
+      />
+      <div class="menu-card-overlay">
+        <span class="menu-card-tag">Para compartir</span>
+        <p class="menu-card-name">Temaki Especial</p>
+        <p class="menu-card-desc">Cornete de alga nori con relleno generoso y salsa propia.</p>
+        <span class="menu-card-price">desde 9 €</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story">
+  <div class="story-images reveal">
+    <img
+      class="story-img-1"
+      src="https://images.unsplash.com/photo-1607301406259-dfb186e15de8?w=700&q=80"
+      alt="Sushi Wu interior"
+    />
+    <img
+      class="story-img-2"
+      src="https://images.unsplash.com/photo-1519984388953-d2406bc725e1?w=700&q=80"
+      alt="Preparación sushi"
+    />
+    <div class="story-badge">
+      <span class="story-badge-inner">4.7★</span>
+      <span>Google</span>
+    </div>
+  </div>
+  <div class="story-content reveal">
+    <span class="section-tag">Nuestra historia</span>
+    <h2 class="section-title">Un rincón<br/><em>familiar</em> en el<br/>corazón de Molins.</h2>
+    <p class="section-body">
+      Pequeño local, grande en sabor. Sushi Wu es un restaurante llevado por una familia apasionada por la cocina japonesa. Cada plato lleva el cuidado y la dedicación de quien cocina para sus propios invitados. Sin artificios, sin pretensiones. Solo sushi de verdad.
+    </p>
+    <div class="story-stats">
+      <div>
+        <p class="stat-num">474</p>
+        <p class="stat-label">Reseñas positivas</p>
+      </div>
+      <div>
+        <p class="stat-num">4.7</p>
+        <p class="stat-label">Puntuación media</p>
+      </div>
+      <div>
+        <p class="stat-num">10€</p>
+        <p class="stat-label">Precio desde</p>
+      </div>
+      <div>
+        <p class="stat-num">144</p>
+        <p class="stat-label">Personas lo recomiendan</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews" id="resenas">
+  <div class="reviews-header reveal">
+    <span class="section-tag" style="display:block;text-align:center;">Lo que dicen nuestros clientes</span>
+    <h2 class="section-title" style="text-align:center;font-size:2.4rem;">Reseñas <em>reales</em></h2>
+  </div>
+  <div style="overflow:hidden;">
+    <div class="reviews-track">
+      <!-- Set 1 -->
+      <div class="review-card">
+        <p class="review-stars">★★★★★</p>
+        <p class="review-text">"Los propietarios son encantadores y el sushi está buenísimo. Superior a muchos sitios mucho más glamurosos."</p>
+        <p class="review-author">Nuria Volpi · Local Guide</p>
+      </div>
+      <div class="review-card">
+        <p class="review-stars">★★★★★</p>
+        <p class="review-text">"Muy buen producto con más pescado que arroz, fresco y de calidad. Una sorpresa maravillosa."</p>
+        <p class="review-author">Cliente de Google</p>
+      </div>
+      <div class="review-card">
+        <p class="review-stars">★★★★★</p>
+        <p class="review-text">"El pescado tiene un color, textura y cantidad impresionante. Un sitio pequeñito pero agradable con buen servicio."</p>
+        <p class="review-author">JR Model · Local Guide</p>
+      </div>
+      <div class="review-card">
+        <p class="review-stars">★★★★★</p>
+        <p class="review-text">"No somos de la zona y nos pasamos por las valoraciones. ¡Sorpresa! Una comida excelente llevada por una familia."</p>
+        <p class="review-author">Mercè Alda</p>
+      </div>
+      <div class="review-card">
+        <p class="review-stars">★★★★★</p>
+        <p class="review-text">"Buena comida y buen servicio. Uno de los mejores sitios de sushi de la zona sin ninguna duda. Volveremos."</p>
+        <p class="review-author">Cliente verificado</p>
+      </div>
+      <!-- Duplicate for seamless loop -->
+      <div class="review-card">
+        <p class="review-stars">★★★★★</p>
+        <p class="review-text">"Los propietarios son encantadores y el sushi está buenísimo. Superior a muchos sitios mucho más glamurosos."</p>
+        <p class="review-author">Nuria Volpi · Local Guide</p>
+      </div>
+      <div class="review-card">
+        <p class="review-stars">★★★★★</p>
+        <p class="review-text">"Muy buen producto con más pescado que arroz, fresco y de calidad. Una sorpresa maravillosa."</p>
+        <p class="review-author">Cliente de Google</p>
+      </div>
+      <div class="review-card">
+        <p class="review-stars">★★★★★</p>
+        <p class="review-text">"El pescado tiene un color, textura y cantidad impresionante. Un sitio pequeñito pero agradable con buen servicio."</p>
+        <p class="review-author">JR Model · Local Guide</p>
+      </div>
+      <div class="review-card">
+        <p class="review-stars">★★★★★</p>
+        <p class="review-text">"No somos de la zona y nos pasamos por las valoraciones. ¡Sorpresa! Una comida excelente llevada por una familia."</p>
+        <p class="review-author">Mercè Alda</p>
+      </div>
+      <div class="review-card">
+        <p class="review-stars">★★★★★</p>
+        <p class="review-text">"Buena comida y buen servicio. Uno de los mejores sitios de sushi de la zona sin ninguna duda. Volveremos."</p>
+        <p class="review-author">Cliente verificado</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFO -->
+<section class="info" id="info">
+  <div class="info-block reveal">
+    <div class="info-icon">📍</div>
+    <span class="info-label">Dirección</span>
+    <p class="info-value">Carrer de Jacint<br/>Verdaguer, 96</p>
+    <p class="info-sub">08750 Molins de Rei<br/>Barcelona</p>
+  </div>
+  <div class="info-block reveal">
+    <div class="info-icon">🕐</div>
+    <span class="info-label">Horario</span>
+    <p class="info-value">Abierto hoy<br/>hasta las 23:30</p>
+    <p class="info-sub">Consulta horarios completos<br/>en Google Maps</p>
+  </div>
+  <div class="info-block reveal">
+    <div class="info-icon">📞</div>
+    <span class="info-label">Contacto</span>
+    <p class="info-value">931 43 84 37</p>
+    <p class="info-sub">
+      <a href="http://sushiwu.es" target="_blank" style="color:var(--gold);text-decoration:none;">sushiwu.es</a><br/>
+      Precio medio: 10–20 €
+    </p>
+  </div>
+</section>
+
+<!-- MAP CTA -->
+<div class="map-cta">
+  <div class="map-cta-text reveal">
+    <h3 class="map-cta-title">¿Cómo llegar?</h3>
+    <p class="map-cta-sub">Carrer de Jacint Verdaguer, 96 · 08750 Molins de Rei, Barcelona</p>
+  </div>
+  <a
+    href="https://maps.google.com/?q=Sushi+Wu+Molins+de+Rei"
+    target="_blank"
+    class="btn-map"
+  >Ver en Google Maps →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <p class="footer-logo">SUSHI <span>WU</span></p>
+      <p class="footer-tagline">Cocina japonesa de familia · Molins de Rei</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <p class="footer-col-title">Menú</p>
+        <ul>
+          <li><a href="#carta">Carta completa</a></li>
+          <li><a href="#carta">Sashimi</a></li>
+          <li><a href="#carta">Maki & Rolls</a></li>
+          <li><a href="#carta">Poke Bowls</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Restaurante</p>
+        <ul>
+          <li><a href="#nosotros">Nuestra historia</a></li>
+          <li><a href="#resenas">Reseñas</a></li>
+          <li><a href="#info">Contacto</a></li>
+          <li><a href="http://sushiwu.es">Web oficial</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Sushi Wu · Todos los derechos reservados</span>
+    <span class="footer-phone">931 43 84 37</span>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
